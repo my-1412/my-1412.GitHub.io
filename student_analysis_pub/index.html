@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>学生数据分析</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 800px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>学生数据分析 - 成绩与出勤统计</h1>
+
+  <canvas id="scoreChart"></canvas>
+  <canvas id="attendanceChart"></canvas>
+
+  <!-- 引入 Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // 示例数据
+    const scores = {
+      labels: ['张三', '李四', '王五', '赵六'],
+      datasets: [{
+        label: '期末成绩',
+        data: [85, 76, 92, 68],
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0'
+        ]
+      }]
+    };
+
+    const attendance = {
+      labels: ['一月', '二月', '三月', '四月'],
+      datasets: [{
+        label: '出勤率 (%)',
+        data: [95, 98, 92, 96],
+        borderColor: '#42b983',
+        fill: false,
+        tension: 0.1
+      }]
+    };
+
+    // 渲染柱状图
+    new Chart(document.getElementById('scoreChart'), {
+      type: 'bar',
+      data: scores,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          title: { display: true, text: '学生成绩分布' }
+        }
+      }
+    });
+
+    // 渲染折线图
+    new Chart(document.getElementById('attendanceChart'), {
+      type: 'line',
+      data: attendance,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          title: { display: true, text: '每月出勤率' }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
