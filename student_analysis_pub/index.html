@@ -2,20 +2,20 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>学生数据分析</title>
+  <title>笔单价数据分析</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       color: #333;
-      text-align: center;
       padding: 40px;
+      text-align: center;
     }
     h1 {
       color: #2c3e50;
     }
     canvas {
-      margin-top: 20px;
+      margin: 40px auto;
       max-width: 800px;
       width: 100%;
     }
@@ -23,63 +23,127 @@
 </head>
 <body>
 
-  <h1>学生数据分析 - 成绩与出勤统计</h1>
+  <h1>笔单价数据分析（15-27 元）</h1>
+  <p>3月、4月、5月结果对比</p>
 
-  <canvas id="scoreChart"></canvas>
-  <canvas id="attendanceChart"></canvas>
+  <!-- 图表容器 -->
+  <canvas id="userChart"></canvas>
+  <canvas id="ueAvgChart"></canvas>
+  <canvas id="ueRatioChart"></canvas>
+  <canvas id="profitChart"></canvas>
+  <canvas id="orderRatioChart"></canvas>
 
   <!-- 引入 Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
-    // 示例数据
-    const scores = {
-      labels: ['张三', '李四', '王五', '赵六'],
-      datasets: [{
-        label: '期末成绩',
-        data: [85, 76, 92, 68],
-        backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#4BC0C0'
-        ]
-      }]
+    // 横轴数据（笔单价）
+    const penPrices = Array.from({ length: 13 }, (_, i) => 15 + i); // 15到27
+
+    // 随机生成数据（你之后可以替换真实数据）
+    const generateData = (min, max) => penPrices.map(() => Math.floor(Math.random() * (max - min + 1)) + min);
+
+    // 3月、4月、5月颜色
+    const colors = {
+      mar: 'rgba(54, 162, 235, 0.6)', // 蓝色
+      apr: 'rgba(255, 99, 132, 0.6)', // 红色
+      may: 'rgba(75, 192, 192, 0.6)'  // 青绿色
     };
 
-    const attendance = {
-      labels: ['一月', '二月', '三月', '四月'],
-      datasets: [{
-        label: '出勤率 (%)',
-        data: [95, 98, 92, 96],
-        borderColor: '#42b983',
-        fill: false,
-        tension: 0.1
-      }]
+    // 图表配置通用选项
+    const commonOptions = {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: true, font: { size: 16 } }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
     };
 
-    // 渲染柱状图
-    new Chart(document.getElementById('scoreChart'), {
+    // 图表1：用户占比（%）
+    new Chart(document.getElementById('userChart'), {
       type: 'bar',
-      data: scores,
+      data: {
+        labels: penPrices,
+        datasets: [
+          { label: '3月', data: generateData(5, 30), backgroundColor: colors.mar },
+          { label: '4月', data: generateData(5, 30), backgroundColor: colors.apr },
+          { label: '5月', data: generateData(5, 30), backgroundColor: colors.may }
+        ]
+      },
       options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          title: { display: true, text: '学生成绩分布' }
-        }
+        ...commonOptions,
+        title: { text: '用户占比（%）' }
       }
     });
 
-    // 渲染折线图
-    new Chart(document.getElementById('attendanceChart'), {
-      type: 'line',
-      data: attendance,
+    // 图表2：平均UE
+    new Chart(document.getElementById('ueAvgChart'), {
+      type: 'bar',
+      data: {
+        labels: penPrices,
+        datasets: [
+          { label: '3月', data: generateData(50, 100), backgroundColor: colors.mar },
+          { label: '4月', data: generateData(50, 100), backgroundColor: colors.apr },
+          { label: '5月', data: generateData(50, 100), backgroundColor: colors.may }
+        ]
+      },
       options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          title: { display: true, text: '每月出勤率' }
-        }
+        ...commonOptions,
+        title: { text: '平均UE' }
+      }
+    });
+
+    // 图表3：UE占比（%）
+    new Chart(document.getElementById('ueRatioChart'), {
+      type: 'bar',
+      data: {
+        labels: penPrices,
+        datasets: [
+          { label: '3月', data: generateData(20, 80), backgroundColor: colors.mar },
+          { label: '4月', data: generateData(20, 80), backgroundColor: colors.apr },
+          { label: '5月', data: generateData(20, 80), backgroundColor: colors.may }
+        ]
+      },
+      options: {
+        ...commonOptions,
+        title: { text: 'UE占比（%）' }
+      }
+    });
+
+    // 图表4：毛利贡献（元）
+    new Chart(document.getElementById('profitChart'), {
+      type: 'bar',
+      data: {
+        labels: penPrices,
+        datasets: [
+          { label: '3月', data: generateData(1000, 5000), backgroundColor: colors.mar },
+          { label: '4月', data: generateData(1000, 5000), backgroundColor: colors.apr },
+          { label: '5月', data: generateData(1000, 5000), backgroundColor: colors.may }
+        ]
+      },
+      options: {
+        ...commonOptions,
+        title: { text: '毛利贡献（元）' }
+      }
+    });
+
+    // 图表5：食堂订单量占比（%）
+    new Chart(document.getElementById('orderRatioChart'), {
+      type: 'bar',
+      data: {
+        labels: penPrices,
+        datasets: [
+          { label: '3月', data: generateData(5, 40), backgroundColor: colors.mar },
+          { label: '4月', data: generateData(5, 40), backgroundColor: colors.apr },
+          { label: '5月', data: generateData(5, 40), backgroundColor: colors.may }
+        ]
+      },
+      options: {
+        ...commonOptions,
+        title: { text: '食堂订单量占比（%）' }
       }
     });
   </script>
